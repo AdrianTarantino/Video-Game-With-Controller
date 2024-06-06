@@ -1,15 +1,39 @@
 import serial
 import time
 
-arduino: serial.Serial = serial.Serial(port='COM4', baudrate=115200, timeout=0.1)
 
-def writeReadTest(writeData: str) -> any:
-  arduino.write(bytes(writeData, 'utf-8'))
-  time.sleep(0.005)
-  data: any = arduino.readline()
-  return data
+def writeDataToDevice(deviceSerialConnection: serial.Serial, data: str) -> None: 
+  # Writes data to serial connected device
+  deviceSerialConnection.write(bytes(data, 'utf-8'))
+  return
 
-while True:
-  number: str = input("Number to send to Arduino: ")
-  value: str = str(writeReadTest(number))
-  print(value)
+
+def readDeviceData(deviceSerialConnection: serial.Serial) -> str:
+  deviceSerialConnectionResponseData: str = deviceSerialConnection.readline().decode()
+  return deviceSerialConnectionResponseData
+
+
+def createDeviceSerialConnection(serialPort: str) -> serial.Serial:
+  for attempt in range(10):
+    try:
+      deviceSerialConnection: serial.Serial = serial.Serial(serialPort, 115200, timeout=1)
+      return deviceSerialConnection
+  
+    except serial.serialutil.SerialException:
+      print("No Serial Connection Found on {serialPort}")
+    time.sleep(1)
+
+
+def main() -> None:
+  SERIAL_PORT: str = 'COM4'
+  deviceSerialConnection = createDeviceSerialConnection(SERIAL_PORT)
+  
+  while True:
+    data: str = input("Input Data: ")
+    writeDataToDevice(deviceSerialConnection, data)
+    deviceSerialConnectionResponseData: str = readDeviceData(deviceSerialConnection)
+    print(deviceSerialConnectionResponseData)
+
+
+if __name__ == '__main__':
+  main()

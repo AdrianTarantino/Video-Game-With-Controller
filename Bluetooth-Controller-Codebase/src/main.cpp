@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-int number;
+String data = "";
 
 void setup() {
   Serial.begin(115200);
@@ -9,6 +9,6 @@ void setup() {
 
 void loop() {
   while(!Serial.available());
-  number = Serial.readString().toInt();
-  Serial.print(number + 1);
+  data = Serial.readString();
+  Serial.print(data);
 }
