@@ -1,6 +1,15 @@
 import serial
+import time
 
-ser = serial.Serial('/dev/ttyUSB0')  # open serial port
-print(ser.name)         # check which port was really used
-ser.write(b'hello')     # write a string
-ser.close()             # close port
+arduino: serial.Serial = serial.Serial(port='COM4', baudrate=115200, timeout=0.1)
+
+def writeReadTest(writeData: str) -> any:
+  arduino.write(bytes(writeData, 'utf-8'))
+  time.sleep(0.05)
+  data: any = arduino.readline()
+  return data
+
+while True:
+  number: str = input("Number to send to Arduino: ")
+  value = writeReadTest(number)
+  print(value)
