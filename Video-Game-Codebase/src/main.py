@@ -1,39 +1,35 @@
-import serial
-import time
+from GameComponent import GameComponent
+import pygame
 
+# pygame setup
+pygame.init()
+WIDTH = 1280
+HEIGHT = 720
+screen = pygame.display.set_mode((1280, 720))
+clock = pygame.time.Clock()
+running = True
+gameComponent = GameComponent('blue', 50, 50)
 
-def writeDataToDevice(deviceSerialConnection: serial.Serial, data: str) -> None: 
-  # Writes data to serial connected device
-  deviceSerialConnection.write(bytes(data, 'utf-8'))
-  return
+while running:
+    # poll for events
+    # pygame.QUIT event means the user clicked X to close your window
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("purple")
+    gameComponent.setXCoordinate(int(WIDTH / 2))
+    gameComponent.setYCoordinate(int(HEIGHT / 2))
+    # gameComponent.draw()
 
-def readDeviceData(deviceSerialConnection: serial.Serial) -> str:
-  deviceSerialConnectionResponseData: str = deviceSerialConnection.readline().decode()
-  return deviceSerialConnectionResponseData
+    screen.blit(gameComponent.image, (gameComponent.getXCoordinate(), gameComponent.getYCoordinate()), gameComponent.image.get_rect())
 
+    # RENDER YOUR GAME HERE
 
-def createDeviceSerialConnection(serialPort: str) -> serial.Serial:
-  for attempt in range(10):
-    try:
-      deviceSerialConnection: serial.Serial = serial.Serial(serialPort, 115200, timeout=1)
-      return deviceSerialConnection
-  
-    except serial.serialutil.SerialException:
-      print("No Serial Connection Found on {serialPort}")
-    time.sleep(1)
+    # flip() the display to put your work on screen
+    pygame.display.flip()
 
+    clock.tick(60)  # limits FPS to 60
 
-def main() -> None:
-  SERIAL_PORT: str = 'COM4'
-  deviceSerialConnection = createDeviceSerialConnection(SERIAL_PORT)
-  
-  while True:
-    data: str = input("Input Data: ")
-    writeDataToDevice(deviceSerialConnection, data)
-    deviceSerialConnectionResponseData: str = readDeviceData(deviceSerialConnection)
-    print(deviceSerialConnectionResponseData)
-
-
-if __name__ == '__main__':
-  main()
+pygame.quit()
