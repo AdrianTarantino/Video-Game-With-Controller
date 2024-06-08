@@ -1,4 +1,4 @@
-from GameComponent import GameComponent
+from Game_Components.GameComponent import GameComponent
 import pygame
 
 # pygame setup
