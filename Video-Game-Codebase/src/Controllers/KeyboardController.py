@@ -19,3 +19,9 @@ class KeyboardController(GameController):
 
     if pygame.key.get_pressed()[pygame.K_d]:
       self.setMovementAdditiveHorizontal(self.movementAdditive)
+
+    if not pygame.key.get_pressed()[pygame.K_w] and not pygame.key.get_pressed()[pygame.K_s]:
+      self.setMovementAdditiveVertical(0)
+
+    if not pygame.key.get_pressed()[pygame.K_a] and not pygame.key.get_pressed()[pygame.K_d]:
+      self.setMovementAdditiveHorizontal(0)

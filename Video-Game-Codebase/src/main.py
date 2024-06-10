@@ -26,15 +26,13 @@ while running:
     screen.fill("purple")
 
     keyboardController.getKeyboardInput()
-    gameComponent.setXCoordinate(keyboardController.getMovementAdditiveHorizontal())
-    gameComponent.setYCoordinate(keyboardController.getMovementAdditiveVertical())
+
+    gameComponent.setXCoordinate(gameComponent.getXCoordinate() + keyboardController.getMovementAdditiveHorizontal())
+    gameComponent.setYCoordinate(gameComponent.getYCoordinate() + keyboardController.getMovementAdditiveVertical())
+
     screen.blit(gameComponent.image, (gameComponent.getXCoordinate(), gameComponent.getYCoordinate()), gameComponent.image.get_rect())
 
-    # RENDER YOUR GAME HERE
-
-    # flip() the display to put your work on screen
     pygame.display.flip()
-
-    clock.tick(60)  # limits FPS to 60
+    clock.tick(60)
 
 pygame.quit()

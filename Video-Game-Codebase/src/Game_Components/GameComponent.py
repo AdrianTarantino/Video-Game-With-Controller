@@ -27,5 +27,4 @@ class GameComponent(pygame.sprite.Sprite):
         return self.rect.y
     
     def setYCoordinate(self, newYCoordinate: int):
-        # self.rect.y = newYCoordinate
-        pass
+        self.rect.y = newYCoordinate

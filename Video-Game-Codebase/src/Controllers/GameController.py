@@ -7,11 +7,11 @@ class GameController():
     return self.movementAdditiveHorizontal
   
   def setMovementAdditiveHorizontal(self, newMovementAdditiveHorizontal: int) -> None:
-    pass
+    self.movementAdditiveHorizontal = newMovementAdditiveHorizontal
 
   def getMovementAdditiveVertical(self) -> int:
     # Returns the amount something should move on vertical axis.
-    self.movementAdditiveVertical
+    return self.movementAdditiveVertical
 
   def setMovementAdditiveVertical(self, newMovementAdditiveVertical: int) -> None:
-    pass
+    self.movementAdditiveVertical = newMovementAdditiveVertical
