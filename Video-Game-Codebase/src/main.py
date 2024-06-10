@@ -1,3 +1,4 @@
+from Controllers.KeyboardController import KeyboardController
 from Game_Components.GameComponent import GameComponent
 import pygame
 
@@ -9,6 +10,10 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 gameComponent = GameComponent('blue', 50, 50)
+keyboardController = KeyboardController()
+
+gameComponent.setXCoordinate(int(WIDTH / 2))
+gameComponent.setYCoordinate(int(HEIGHT / 2))
 
 while running:
     # poll for events
@@ -19,10 +24,10 @@ while running:
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
-    gameComponent.setXCoordinate(int(WIDTH / 2))
-    gameComponent.setYCoordinate(int(HEIGHT / 2))
-    # gameComponent.draw()
 
+    keyboardController.getKeyboardInput()
+    gameComponent.setXCoordinate(keyboardController.getMovementAdditiveHorizontal())
+    gameComponent.setYCoordinate(keyboardController.getMovementAdditiveVertical())
     screen.blit(gameComponent.image, (gameComponent.getXCoordinate(), gameComponent.getYCoordinate()), gameComponent.image.get_rect())
 
     # RENDER YOUR GAME HERE
