@@ -1,5 +1,6 @@
-from Controllers.KeyboardController import KeyboardController
 from Game_Components.GameComponent import GameComponent
+from Game_Controllers.KeyboardController import KeyboardController
+from Game_Controllers.JoystickController import JoystickController
 import pygame
 
 # pygame setup
@@ -10,7 +11,10 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 gameComponent = GameComponent('blue', 50, 50)
-keyboardController = KeyboardController()
+COM_PORT: str = "COM3"
+
+# keyboardController = KeyboardController()
+joystickController: JoystickController = JoystickController(COM_PORT)
 
 gameComponent.setXCoordinate(int(WIDTH / 2))
 gameComponent.setYCoordinate(int(HEIGHT / 2))
@@ -25,10 +29,10 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    keyboardController.getKeyboardInput()
+    xAndYCoordinates = joystickController.readDeviceData().decode()
 
-    gameComponent.setXCoordinate(gameComponent.getXCoordinate() + keyboardController.getMovementAdditiveHorizontal())
-    gameComponent.setYCoordinate(gameComponent.getYCoordinate() + keyboardController.getMovementAdditiveVertical())
+    gameComponent.setXCoordinate(gameComponent.getXCoordinate() + xAndYCoordinates[0])
+    gameComponent.setYCoordinate(gameComponent.getYCoordinate() + xAndYCoordinates[1])
 
     screen.blit(gameComponent.image, (gameComponent.getXCoordinate(), gameComponent.getYCoordinate()), gameComponent.image.get_rect())
 

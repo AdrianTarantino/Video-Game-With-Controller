@@ -1,4 +1,4 @@
-from Controllers.GameController import GameController
+from Game_Controllers.GameController import GameController
 import pygame
 
 class KeyboardController(GameController):

@@ -1,17 +1,17 @@
 import serial.serialutil
-from Game_Components.GameComponent import GameComponent
+from Game_Controllers.GameController import GameController
 import serial
 import time
 
 serial.Serial()
 
-class JoystickController(GameComponent):
+class JoystickController(GameController):
   def __init__(self, serialPort: str, baudrate: int = 115200, timeout: int = 1):
     # Initializes Joystick Controller class, as well as establish serial connection between computer and joystick controller.
     super().__init__()
     self.joystickControllerSerialConnection = self.createDeviceSerialConnection(serialPort, baudrate, timeout)
 
-  def createDeviceSerialConnection(serialPort: str, baudrate: int = 115200, timeout: int = 1) -> serial.Serial:
+  def createDeviceSerialConnection(self, serialPort: str, baudrate: int = 115200, timeout: int = 1) -> serial.Serial:
     # Establishes serial connection between joystick controller and computer.
     for attempt in range(10):
       try:
@@ -22,13 +22,13 @@ class JoystickController(GameComponent):
         print(f"Attempt {attempt} Failed! No Serial Connection Found on {serialPort}")
         time.sleep(1)
 
-  def readDeviceData(deviceSerialConnection: serial.Serial) -> tuple:
+  def readDeviceData(self) -> tuple:
     # Reads data sent from the controller and decodes it.
     # Returns data in tuple formatted (xValue, yValue).
     # Data from joystick controller is formatted 'xValue yValue'.
-    deviceSerialConnectionResponseData: str = deviceSerialConnection.readline().decode()
-    formattedData = tuple(deviceSerialConnectionResponseData)
-    return formattedData
+    deviceSerialConnectionResponseData: str = self.joystickControllerSerialConnection.readline()
+    print(deviceSerialConnectionResponseData)
+    return (0, 0)
   
 # def writeDataToDevice(deviceSerialConnection: serial.Serial, data: str) -> None: 
 #   deviceSerialConnection.write(bytes(data, 'utf-8'))
