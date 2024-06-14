@@ -297,7 +297,7 @@ def main():
 
     X_CENTER = 357
     Y_CENTER = 354
-    JOYSTICK_CONTROL_DELAY = 200
+    JOYSTICK_CONTROL_DELAY = 10
     joystickCotrolIndex = 0
 
     arduino = serial.Serial(COM_PORT)
@@ -358,9 +358,15 @@ def main():
                     print(convert_shape_format(current_piece))'''  # todo fix
 
         arduinoDataList = arduino.readline().decode().split(',')
-        arduinoX = int(arduinoDataList[0].replace('\x00', '').strip()) - X_CENTER
-        arduinoY = int(arduinoDataList[1].replace('\x00', '').strip()) - Y_CENTER
-        print(arduinoX, ',', arduinoY)
+        try:
+            arduinoX = int(arduinoDataList[0].replace('\x00', '').strip()) - X_CENTER
+            arduinoY = int(arduinoDataList[1].replace('\x00', '').strip()) - Y_CENTER
+            arduinoUpButton = int(arduinoDataList[2].replace('\x00', '').strip())
+            arduinoDownButton = int(arduinoDataList[3].replace('\x00', '').strip())
+            arduinoLeftButton = int(arduinoDataList[4].replace('\x00', '').strip())
+            arduinoRightButton = int(arduinoDataList[5].replace('\x00', '').strip())
+        except IndexError:
+            print("Invalid Controller Input")
 
         if 0 == joystickCotrolIndex:
             if arduinoX > 300:
@@ -372,6 +378,17 @@ def main():
                 current_piece.x -= 1
                 if not valid_space(current_piece, grid):
                     current_piece.x += 1
+
+            if arduinoLeftButton == 0:
+                current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
+                if not valid_space(current_piece, grid):
+                    current_piece.rotation = current_piece.rotation - 1 % len(current_piece.shape)
+
+            if arduinoDownButton == 0:
+                current_piece.y += 1
+                if not valid_space(current_piece, grid):
+                    current_piece.y -= 1
+            
 
         shape_pos = convert_shape_format(current_piece)
 
@@ -403,7 +420,7 @@ def main():
             run = False
 
         joystickCotrolIndex += 1
-        if joystickCotrolIndex > 20:
+        if joystickCotrolIndex > JOYSTICK_CONTROL_DELAY:
             joystickCotrolIndex = 0
 
     draw_text_middle("You Lost", 40, (255,255,255), win)
